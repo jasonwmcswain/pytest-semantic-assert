@@ -20,6 +20,7 @@ A pytest plugin for semantic assertions of LLM outputs using embedding-based sim
 - [Why pytest-semantic-assert?](#why-pytest-semantic-assert)
 - [Features](#features)
 - [Installation](#installation)
+- [Dependencies](#dependencies)
 - [Quick Start](#quick-start)
 - [Configuration Options](#configuration-options)
 - [Understanding Failures](#understanding-failures)
@@ -101,6 +102,43 @@ pip install pytest-semantic-assert
 - ~100MB disk space for the embedding model
 
 **First-time setup**: The embedding model (~80MB) downloads automatically on first use (~30 seconds). No API keys or external services required!
+
+---
+
+## Dependencies
+
+### Production Dependencies
+
+These packages are installed automatically when you install `pytest-semantic-assert`:
+
+| Library | Use Case |
+|---------|----------|
+| [pytest](https://docs.pytest.org/) ≥7.0 | Testing framework integration and plugin system |
+| [sentence-transformers](https://www.sbert.net/) ≥2.2.0 | Semantic embedding generation using transformer models |
+| [numpy](https://numpy.org/) ≥1.21.0 | Efficient numerical operations for similarity computations |
+| [filelock](https://github.com/tox-dev/py-filelock) ≥3.0.0 | Thread-safe file locking for parallel test execution |
+
+**Total install size**: ~500MB (including the embedding model)
+
+### Development Dependencies
+
+These packages are only needed if you're contributing to the project:
+
+| Library | Use Case |
+|---------|----------|
+| [pytest-cov](https://pytest-cov.readthedocs.io/) | Code coverage reporting and analysis |
+| [pytest-xdist](https://pytest-xdist.readthedocs.io/) | Parallel test execution across multiple CPUs |
+| [pytest-asyncio](https://pytest-asyncio.readthedocs.io/) | Testing async/await functionality |
+| [black](https://black.readthedocs.io/) | Code formatting and style consistency |
+| [ruff](https://docs.astral.sh/ruff/) | Fast Python linter for code quality checks |
+| [mypy](https://mypy.readthedocs.io/) | Static type checking and type safety validation |
+| [build](https://pypa-build.readthedocs.io/) | Building distribution packages (wheel, sdist) |
+| [twine](https://twine.readthedocs.io/) | Uploading packages to PyPI |
+
+**Install development dependencies**:
+```bash
+pip install pytest-semantic-assert[dev]
+```
 
 ---
 
