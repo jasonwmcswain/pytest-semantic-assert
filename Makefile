@@ -107,7 +107,7 @@ coverage-combined:
 	@echo "✅ Combined coverage report generated! Open htmlcov/index.html to view."
 
 .PHONY: validate
-validate: venv ruff-check format coverage-combined
+validate: venv ruff-check format coverage-combined version-bump version-show
 	@echo "✅ All validation checks passed!"
 
 # --- Build & Versioning ---
