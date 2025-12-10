@@ -773,13 +773,18 @@ See [Development Guide](docs/development/DEVELOPMENT.md) for setup and guideline
 ### Development Setup
 
 ```bash
-git clone https://github.com/your-org/pytest-semantic-assert.git
+git clone https://github.com/jasonwmcswain/pytest-semantic-assert.git
 cd pytest-semantic-assert
 make venv
 source venv/bin/activate
 pip install -e ".[dev]"
 make test
 ```
+
+---
+
+## Legal Notice & Disclaimer
+This project is an independent work intended for general consumption. It does not contain any proprietary code, intellectual property, or confidential information belonging to any company.
 
 ---
 
@@ -826,7 +831,7 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 - [ ] Integration with popular LLM testing frameworks
 - [ ] Streaming assertion support for large texts
 
-Vote on features or suggest new ones via [GitHub Issues](https://github.com/pytest-semantic-assert/pytest-semantic-assert/issues)!
+Vote on features or suggest new ones via [GitHub Issues](https://github.com/jasonwmcswain/pytest-semantic-assert/issues)!
 
 ## Security & Privacy
 
@@ -861,21 +866,6 @@ All dependencies are well-maintained, widely-used packages:
 On first use, `sentence-transformers` downloads the embedding model (~80MB) from HuggingFace Hub. This is a one-time operation. The model is cached in:
 - Default: `~/.cache/huggingface/` or `~/.cache/torch/`
 - Custom: Set `HF_HOME` environment variable
-
-## Citation
-
-If you use pytest-semantic-assert in research or production, please cite:
-
-```bibtex
-@software{pytest_semantic_assert,
-  title = {pytest-semantic-assert: Semantic Assertions for LLM Testing},
-  author = {pytest-semantic-assert Contributors},
-  year = {2025},
-  version = {0.1.0},
-  url = {https://github.com/pytest-semantic-assert/pytest-semantic-assert},
-  note = {A pytest plugin for semantic assertions using embedding-based similarity}
-}
-```
 
 ## Acknowledgments
 
