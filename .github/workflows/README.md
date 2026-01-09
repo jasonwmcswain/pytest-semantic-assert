@@ -42,7 +42,7 @@ This repository uses GitHub Actions for continuous integration and publishing to
 
 2. **Full Test Suite**
    - Runs complete test suite with coverage
-   - Enforces 90% coverage threshold
+   - Enforces 80% coverage threshold
    - Includes disk space cleanup
 
 3. **Build and Publish** (only on matching tags)
@@ -115,9 +115,9 @@ To release a new version to PyPI:
 
 ## Coverage Requirements
 
-- **Minimum coverage**: 90%
+- **Minimum coverage**: 80%
 - The PR and CI workflows will warn if coverage falls below this threshold
-- The Publish workflow will fail if coverage is below 90%
+- The Publish workflow will fail if coverage is below 80%
 
 ## Testing Matrix
 
