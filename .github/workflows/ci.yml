@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  quick-check:
+    name: Quick Health Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Lint with Black
+        run: black --check pytest_semantic_assert tests
+
+      - name: Lint with Ruff
+        run: ruff check pytest_semantic_assert tests
+
+      - name: Type check with MyPy
+        run: mypy pytest_semantic_assert
+
+      - name: Run tests
+        run: pytest --cov=pytest_semantic_assert --cov-report=term-missing -q
+
+      - name: Check coverage
+        run: |
+          COVERAGE=$(coverage report | grep TOTAL | awk '{print $4}' | sed 's/%//')
+          echo "Coverage: ${COVERAGE}%"
+          if (( $(echo "$COVERAGE < 90" | bc -l) )); then
+            echo "⚠️ Coverage ${COVERAGE}% is below 90% threshold"
+          else
+            echo "✅ Coverage ${COVERAGE}% meets threshold"
+          fi
