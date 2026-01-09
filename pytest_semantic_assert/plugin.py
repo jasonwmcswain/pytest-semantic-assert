@@ -66,7 +66,7 @@ def pytest_configure(config: pytest.Config) -> None:
     _config.validate()
 
     # Store config in pytest namespace for access from tests
-    config._semantic_assert_config = _config  # type: ignore
+    config._semantic_assert_config = _config
 
 
 def get_embedding_manager(config: pytest.Config) -> EmbeddingManager:

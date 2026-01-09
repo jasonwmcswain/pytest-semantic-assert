@@ -30,7 +30,7 @@ jobs:
         run: ruff check pytest_semantic_assert tests
 
       - name: Run MyPy check
-        run: mypy pytest_semantic_assert
+        run: mypy pytest_semantic_assert --verbose --pretty --no-incremental --cache-dir=/dev/null
 
   test:
     name: Test (Python ${{ matrix.python-version }})

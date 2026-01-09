@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pytest-semantic-assert"
-version = "0.1.2"
+version = "0.1.4"
 description = "Pytest plugin for semantic LLM output assertions using embeddings. Test meaning, not strings."
 readme = "README.md"
 license = {text = "MIT"}
@@ -134,9 +134,12 @@ no_implicit_optional = true
 warn_redundant_casts = true
 warn_unused_ignores = true
 warn_no_return = true
-follow_imports = "normal"
+follow_imports = "skip"
 strict_equality = true
 strict = true
+mypy_path = "$MYPY_CONFIG_FILE_DIR"
+explicit_package_bases = true
+namespace_packages = true
 
 [[tool.mypy.overrides]]
 module = "tests.*"
@@ -150,6 +153,11 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 module = ["_pytest.*", "pytest.*"]
 ignore_missing_imports = true
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = "pytest_semantic_assert.*"
+follow_imports = "normal"
 
 [tool.pytest.ini_options]
 minversion = "7.0"

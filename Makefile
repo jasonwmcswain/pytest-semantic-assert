@@ -21,6 +21,7 @@ help:
 	@echo "  make format        - Format code using Black"
 	@echo "  make ruff-check    - Run Ruff linter (check only)"
 	@echo "  make ruff-fix      - Run Ruff linter (auto-fix)"
+	@echo "  make mypy-check    - Run MyPy type checker (check only)"
 	@echo ""
 	@echo "Testing:"
 	@echo "  make unittest      - Run all tests with coverage"
@@ -29,7 +30,7 @@ help:
 	@echo "  make contract-test - Run only contract tests with coverage"
 	@echo "  make e2e-test      - Run only E2E tests with coverage"
 	@echo "  make coverage-combined - Run all tests with combined coverage"
-	@echo "  make validate      - Run all checks (ruff, format, tests)"
+	@echo "  make validate      - Run all checks (ruff, mypy, format, tests)"
 	@echo ""
 	@echo "Build & Version:"
 	@echo "  make build         - Build the source and wheel distribution"
@@ -63,6 +64,10 @@ ruff-check:
 .PHONY: ruff-fix
 ruff-fix:
 	$(BIN)/ruff check --fix $(SRC_DIR) $(TEST_DIR)
+
+.PHONY: mypy-check
+mypy-check:
+	$(BIN)/mypy --verbose --pretty --junit-xml=.mypy-junit.xml $(SRC_DIR)
 
 # --- Testing ---
 .PHONY: unittest
@@ -107,7 +112,7 @@ coverage-combined:
 	@echo "✅ Combined coverage report generated! Open htmlcov/index.html to view."
 
 .PHONY: validate
-validate: venv ruff-check format coverage-combined version-bump version-show
+validate: venv ruff-check mypy-check format coverage-combined version-bump version-show
 	@echo "✅ All validation checks passed!"
 
 # --- Build & Versioning ---
@@ -121,6 +126,7 @@ clean:
 	find . -type d -name "htmlcov" -exec rm -rf {} +
 	find . -type f -name ".coverage" -delete
 	find . -type f -name "*.pyc" -delete
+	find . -type f -name ".mypy-junit.xml" -delete
 
 .PHONY: version-show
 version-show:

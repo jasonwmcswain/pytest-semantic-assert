@@ -38,7 +38,7 @@ jobs:
         run: ruff check pytest_semantic_assert tests
 
       - name: Type check with MyPy
-        run: mypy pytest_semantic_assert
+        run: mypy pytest_semantic_assert --verbose --pretty --no-incremental --cache-dir=/dev/null
 
       - name: Run tests
         run: pytest --cov=pytest_semantic_assert --cov-report=term-missing -q
