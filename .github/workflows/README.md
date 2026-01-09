@@ -17,6 +17,8 @@ This repository uses GitHub Actions for continuous integration and publishing to
 - OS: ubuntu-latest, windows-latest, macos-latest
 - Python: 3.9, 3.10, 3.11, 3.12
 
+**Note**: On Ubuntu runners, the workflow frees up disk space before installing dependencies to handle large ML packages like PyTorch and CUDA libraries.
+
 ### 2. CI ([ci.yml](./ci.yml))
 
 **Triggered on:** Pushes to `main` branch (non-tag)
@@ -24,6 +26,7 @@ This repository uses GitHub Actions for continuous integration and publishing to
 **Jobs:**
 - Quick health check including linting, type checking, and tests
 - Runs on Python 3.11 + Ubuntu only for faster feedback
+- Includes disk space cleanup for ML dependencies
 
 ### 3. Publish to PyPI ([publish.yml](./publish.yml))
 
@@ -40,6 +43,7 @@ This repository uses GitHub Actions for continuous integration and publishing to
 2. **Full Test Suite**
    - Runs complete test suite with coverage
    - Enforces 90% coverage threshold
+   - Includes disk space cleanup
 
 3. **Build and Publish** (only on matching tags)
    - Builds distribution packages
@@ -49,6 +53,14 @@ This repository uses GitHub Actions for continuous integration and publishing to
 4. **Test Installation** (after successful publish)
    - Installs package from PyPI on all supported Python versions and OS
    - Verifies the installation works correctly
+
+## Disk Space Management
+
+This project depends on large ML packages (PyTorch, CUDA libraries, sentence-transformers) that can exceed 3GB. The workflows include automated disk space cleanup on Ubuntu runners to prevent "No space left on device" errors:
+
+- Removes .NET, GHC, Boost libraries (not needed for Python tests)
+- Uses `--no-cache-dir` with pip to avoid caching large packages
+- Frees up several GB of space before installing dependencies
 
 ## Setup Requirements
 
