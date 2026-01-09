@@ -22,6 +22,7 @@ jobs:
       - name: Get version
         id: get_version
         run: |
+          echo "Extracting package version from pyproject.toml..."
           VERSION=$(python3 -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Package version: $VERSION"
@@ -29,6 +30,7 @@ jobs:
       - name: Check if tag matches version
         id: check
         run: |
+          echo "Checking if the push is a tag matching the package version..."
           if [[ ${{ github.ref_type }} == "tag" ]]; then
             TAG_VERSION=${GITHUB_REF#refs/tags/v}
             if [[ "$TAG_VERSION" == "${{ steps.get_version.outputs.version }}" ]]; then
@@ -54,6 +56,7 @@ jobs:
 
       - name: Free up disk space
         run: |
+          echo "Freeing up disk space..."
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /opt/ghc
           sudo rm -rf "/usr/local/share/boost"
@@ -68,15 +71,33 @@ jobs:
 
       - name: Install dependencies
         run: |
+          echo "Installing dependencies..."
           python -m pip install --upgrade pip
           pip install --no-cache-dir -e ".[dev]"
+          echo "✅ Dependencies installed successfully"
+
+      - name: Pre-download ML models
+        run: |
+          echo "Pre-downloading ML models..."
+          python -c "
+          import sys
+          print('Pre-downloading sentence-transformers models...')
+          from sentence_transformers import SentenceTransformer
+          print('Downloading default model...')
+          model = SentenceTransformer('all-MiniLM-L6-v2')
+          print('✅ Model downloaded successfully')
+          "
 
       - name: Run full test suite
         run: |
-          pytest --cov=pytest_semantic_assert --cov-report=term-missing --cov-report=xml
+          echo "Starting tests with coverage..."
+          pytest --cov=pytest_semantic_assert --cov-report=term-missing --cov-report=xml -v --timeout=300
+        env:
+          PYTEST_TIMEOUT: 300
 
       - name: Check coverage threshold
         run: |
+          echo "Checking coverage threshold..."
           COVERAGE=$(coverage report | grep TOTAL | awk '{print $4}' | sed 's/%//')
           echo "Current coverage: ${COVERAGE}%"
           if (( $(echo "$COVERAGE < 80" | bc -l) )); then
@@ -108,14 +129,19 @@ jobs:
 
       - name: Install build dependencies
         run: |
+          echo "Installing build dependencies..."
           python -m pip install --upgrade pip
           pip install build twine
 
       - name: Build package
-        run: python -m build
+        run: |
+          echo "Building package..."
+          python -m build
 
       - name: Check package
-        run: twine check dist/*
+        run: |
+          echo "Checking package with twine..."
+          twine check dist/*
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
@@ -127,7 +153,7 @@ jobs:
   test-install:
     name: Test Installation
     runs-on: ${{ matrix.os }}
-    needs: build-and-publish
+    needs: [validate, build-and-publish]
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
@@ -140,20 +166,25 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Wait for PyPI to update
-        run: sleep 60
+        run: |
+          echo "Waiting for PyPI to update..."
+          sleep 60
 
       - name: Install from PyPI
         run: |
+          echo "Installing pytest-semantic-assert version ${{ needs.validate.outputs.version }} from PyPI..."
           pip install pytest-semantic-assert==${{ needs.validate.outputs.version }}
           pip show pytest-semantic-assert
 
       - name: Verify installation
         run: |
+          echo "Verifying installation..."
           python -c "import pytest_semantic_assert; print(pytest_semantic_assert.__version__)"
           pytest --version | grep semantic
 
       - name: Create simple test
         run: |
+          echo "Creating simple test file..."
           cat > test_install.py << 'EOF'
           def test_plugin_installed():
               from pytest_semantic_assert import assert_semantic
@@ -161,4 +192,6 @@ jobs:
           EOF
 
       - name: Run test with plugin
-        run: pytest test_install.py -v
+        run: |
+          echo "Running test with plugin..."
+          pytest test_install.py -v
