@@ -41,6 +41,7 @@ help:
 	@echo "Publishing:"
 	@echo "  make publish-test  - Upload to TestPyPI"
 	@echo "  make publish       - Upload to PyPI"
+	@echo "  make release       - Full release: validate, commit, tag, and push"
 	@echo ""
 	@echo "Pipeline:"
 	@echo "  make all           - Clean, Format, Check, Test, Build"
@@ -168,6 +169,20 @@ publish-test: build
 publish: build
 	@echo "🚀 Uploading to Production PyPI..."
 	$(BIN)/twine upload dist/*
+
+.PHONY: release
+release: validate
+	@echo "📦 Creating release for version $$(make version-show)..."
+	@echo "Step 1: Committing changes..."
+		git add pyproject.toml CHANGELOG.md
+		git commit -m "Bump version to $$(make version-show)" || echo "No changes to commit"
+	@echo "Step 2: Creating git tag v$$(make version-show)..."
+		git tag -a "v$$(make version-show)" -m "Release v$$(make version-show)"
+	@echo "Step 3: Pushing commit and tag to origin..."
+		git push && git push origin "v$$(make version-show)"
+	@echo "✅ Release v$$(make version-show) created and pushed!"
+	@echo "🚀 GitHub Actions will now build and publish to PyPI"
+	@echo "📊 Watch the progress at: https://github.com/$(shell git config --get remote.origin.url | sed 's/.*://;s/\.git$$//')/actions"
 
 # --- Pipeline ---
 .PHONY: all

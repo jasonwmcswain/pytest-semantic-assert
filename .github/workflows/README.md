@@ -92,7 +92,29 @@ The workflows use PyPI's trusted publishing (recommended), which doesn't require
 
 ## Release Process
 
-To release a new version to PyPI:
+### Automated Release (Recommended)
+
+The easiest way to release is using the Makefile:
+
+```bash
+# 1. Update version and changelog
+make version-bump  # or: make version-bump PART=minor/major
+# Edit CHANGELOG.md
+
+# 2. Run full release (validates, commits, tags, and pushes)
+make release
+```
+
+This single command will:
+- ✅ Run all validation checks (ruff, mypy, format, tests)
+- ✅ Commit changes to `pyproject.toml` and `CHANGELOG.md`
+- ✅ Create an annotated git tag (e.g., `v0.1.4`)
+- ✅ Push commit and tag to GitHub
+- ✅ Trigger GitHub Actions to build and publish to PyPI
+
+### Manual Release
+
+To release a new version to PyPI manually:
 
 1. Update the version in [`pyproject.toml`](../../pyproject.toml) (line 7)
 2. Update the [`CHANGELOG.md`](../../CHANGELOG.md)
