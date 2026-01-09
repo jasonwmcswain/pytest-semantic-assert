@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pytest-semantic-assert"
-version = "0.1.5"
+version = "0.1.6"
 description = "Pytest plugin for semantic LLM output assertions using embeddings. Test meaning, not strings."
 readme = "README.md"
 license = {text = "MIT"}
