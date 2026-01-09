@@ -91,7 +91,7 @@ jobs:
       - name: Run full test suite
         run: |
           echo "Starting tests with coverage..."
-          pytest --cov=pytest_semantic_assert --cov-report=term-missing --cov-report=xml -v --timeout=300
+          pytest --cov=pytest_semantic_assert --cov-report=term-missing --cov-report=xml -v
         env:
           PYTEST_TIMEOUT: 300
 
