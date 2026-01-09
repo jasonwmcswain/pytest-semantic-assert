@@ -147,6 +147,10 @@ disallow_incomplete_defs = false
 module = "sentence_transformers.*"
 ignore_missing_imports = true
 
+[[tool.mypy.overrides]]
+module = ["_pytest.*", "pytest.*"]
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 minversion = "7.0"
 addopts = "-ra -q --strict-markers"
